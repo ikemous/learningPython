@@ -40,3 +40,8 @@ class Ship:
         # Update Rect Object from self.x
         self.rect.x = self.x;
         self.rect.y = self.y;
+
+    def centerShip(self):
+        ''' Center The Ship On The Screen '''
+        self.rect.midbottom = self.screenRect.midbottom;
+        self.x = float(self.rect.x);

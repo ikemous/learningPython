@@ -17,3 +17,9 @@ class Settings:
 
         # Ship Settings
         self.shipImage = "images/beetle.png"
+        self.shipLimit = 3;
+
+        # Alien Settings
+        self.alienSpeed = 1.0;
+        self.fleetDropSpeed = 10;
+        self.fleetDirection = 1;
