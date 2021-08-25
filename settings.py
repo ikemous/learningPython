@@ -7,5 +7,5 @@ class Settings:
         self.screenWidth = 1200;
         self.screenHeight = 800;
         self.backgroundColor = (100, 50, 10);
-        self.appImage = "images/beetle.png";
+        self.appIcon = "images\\icon.png";
 

@@ -1,6 +1,7 @@
 import sys;
 import pygame;
 from settings import Settings;
+import ctypes
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -10,10 +11,11 @@ class Application:
         pygame.init();
         self.settings = Settings();
         self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
-        self.icon = pygame.image.load(self.settings.appImage);
+        self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         pygame.display.set_caption(self.settings.caption);
+        
 
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
@@ -30,9 +32,11 @@ class Application:
         while True:
             self.checkEvents();       
             self.updateScreen();
-            pygame.display.update();
 
 if __name__ == '__main__':
+    myappid = u'mycompany.myproduct.subproduct.version' # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
     # Make a game instance and run the game
     app = Application();
     app.runGame();
