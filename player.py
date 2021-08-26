@@ -17,6 +17,23 @@ class Player:
         # Starting position of the player
         self.rect.midbottom = self.screenRect.midbottom;
 
+        # Movement Flags
+        self.movingRight = False;
+        self.movingLeft = False;
+        self.movingUp = False;
+        self.movingDown = False;
+
+    def update(self):
+        ''' Update the players position based on the movement flag '''
+        if self.movingRight:
+            self.rect.x += self.settings.playerSpeed;
+        elif self.movingLeft:
+            self.rect.x -= self.settings.playerSpeed;
+        elif self.movingUp:
+            self.rect.y -= self.settings.playerSpeed;
+        elif self.movingDown:
+            self.rect.y += self.settings.playerSpeed;
+
     def blitme(self):
         ''' Draw the player at the current position '''
         self.screen.blit(self.image, self.rect);

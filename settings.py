@@ -11,3 +11,4 @@ class Settings:
 
         # Player Settings
         self.playerImage = "images\\stingray.bmp";
+        self.playerSpeed = 1;

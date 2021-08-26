@@ -18,11 +18,36 @@ class Application:
         pygame.display.set_caption(self.settings.caption);
         self.player = Player(self);
 
+    def checkKeyDown(self, event):
+        if event.key == pygame.K_a:
+            self.player.movingLeft = True;
+        elif event.key == pygame.K_d:
+            self.player.movingRight = True;
+        elif event.key == pygame.K_w:
+            self.player.movingUp = True;
+        elif event.key == pygame.K_s:
+            self.player.movingDown = True;
+
+    def checkKeyUp(self, event):
+        if event.key == pygame.K_a:
+            self.player.movingLeft = False;
+        elif event.key == pygame.K_d:
+            self.player.movingRight = False;
+        elif event.key == pygame.K_w:
+            self.player.movingUp = False;
+        elif event.key == pygame.K_s:
+            self.player.movingDown = False;
+
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit();
+            elif event.type == pygame.KEYDOWN:
+                self.checkKeyDown(event);
+            elif event.type == pygame.KEYUP:
+                self.checkKeyUp(event);
+                
             
     def updateScreen(self):
         self.screen.fill(self.settings.backgroundColor);
@@ -32,7 +57,8 @@ class Application:
     def runGame(self):
         ''' Star the main loop for the game '''
         while True:
-            self.checkEvents();       
+            self.checkEvents();      
+            self.player.update(); 
             self.updateScreen();
 
 if __name__ == '__main__':
