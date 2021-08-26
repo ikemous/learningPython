@@ -19,6 +19,7 @@ class Application:
         self.player = Player(self);
 
     def checkKeyDown(self, event):
+        ''' Respond To Key presses'''
         if event.key == pygame.K_a:
             self.player.movingLeft = True;
         elif event.key == pygame.K_d:
@@ -29,6 +30,7 @@ class Application:
             self.player.movingDown = True;
 
     def checkKeyUp(self, event):
+        ''' Respond To Key releases '''
         if event.key == pygame.K_a:
             self.player.movingLeft = False;
         elif event.key == pygame.K_d:
