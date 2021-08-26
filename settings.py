@@ -9,3 +9,5 @@ class Settings:
         self.backgroundColor = (100, 50, 10);
         self.appIcon = "images\\icon.png";
 
+        # Player Settings
+        self.playerImage = "images\\stingray.bmp";

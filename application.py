@@ -1,7 +1,8 @@
 import sys;
 import pygame;
-from settings import Settings;
 import ctypes
+from settings import Settings;
+from player import Player;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -15,7 +16,7 @@ class Application:
         pygame.display.set_icon(self.icon);
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         pygame.display.set_caption(self.settings.caption);
-        
+        self.player = Player(self);
 
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
@@ -25,6 +26,7 @@ class Application:
             
     def updateScreen(self):
         self.screen.fill(self.settings.backgroundColor);
+        self.player.blitme();
         pygame.display.flip();
 
     def runGame(self):
@@ -34,8 +36,9 @@ class Application:
             self.updateScreen();
 
 if __name__ == '__main__':
-    myappid = u'mycompany.myproduct.subproduct.version' # arbitrary string
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    # Lines of code to allow the icon to be in the taskbar
+    myappid = u'mycompany.myproduct.subproduct.version'; # arbitrary string
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid);
 
     # Make a game instance and run the game
     app = Application();
