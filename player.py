@@ -33,7 +33,7 @@ class Player:
         # distance between two points sqrt((X2 - X1)^2 + (Y2 - Y1)^2)
         return sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2);
 
-    def calculateRotateAngle(self):
+    def updateRotateAngle(self):
         ''' Calculate rotation from old and new mouse posisitons '''
         playerPos = (self.rect.x + 30, self.rect.y + 30);
         self.currentMousePos = pygame.mouse.get_pos();
@@ -56,7 +56,7 @@ class Player:
         # Update the players x and y position
         self.rect.x = self.x;
         self.rect.y = self.y;
-        self.calculateRotateAngle();
+        self.updateRotateAngle();
 
     def blitme(self):
         ''' Draw the player at the current position '''
