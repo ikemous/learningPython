@@ -19,9 +19,7 @@ class Player:
         self.rect.midbottom = self.screenRect.midbottom;
         self.x = float(self.rect.x);
         self.y = float(self.rect.y);
-        self.lastMousePos = (self.screenRect.centerx, 0);
-        self.currentMousePos = (0, 0);
-
+        self.currentMousePos = (self.screenRect.centerx, 0);
         self.rotateAngle = 0;
 
         # Movement Flags
@@ -37,15 +35,13 @@ class Player:
 
     def calculateRotateAngle(self):
         ''' Calculate rotation from old and new mouse posisitons '''
-        playerPos = (self.rect.x, self.rect.y);
-        mousePos = pygame.mouse.get_pos();
+        playerPos = (self.rect.x + 30, self.rect.y + 30);
+        self.currentMousePos = pygame.mouse.get_pos();
         
-        sideA = self.calculateSideLength(self.lastMousePos, playerPos);
-        sideB = self.calculateSideLength(self.lastMousePos, pygame.mouse.get_pos());
-        sideC = self.calculateSideLength(playerPos, pygame.mouse.get_pos());
-        angle = atan2(mousePos[1] - playerPos[1], mousePos[0] - playerPos[0]);
-        print(f"Player Point:{playerPos} Mouse Point:{mousePos} Angle: {self.rotateAngle}");
+        angle = atan2(playerPos[0] - self.currentMousePos[0], playerPos[1] - self.currentMousePos[1]);
         self.rotateAngle = degrees(angle);
+        print(f"Player Point:{playerPos} Mouse Point:{self.currentMousePos} Angle: {self.rotateAngle}");
+        print(self.rect);
 
     def update(self):
         ''' Update the players position based on the movement flag '''
