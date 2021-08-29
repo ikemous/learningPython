@@ -12,3 +12,9 @@ class Settings:
         # Player Settings
         self.playerImage = "images\\stingray.bmp";
         self.playerSpeed = 1;
+
+        # Bullet Settings
+        self.bulletSpeed = 1.0;
+        self.bulletWidth = 3;
+        self. bulletHeight = 10;
+        self.bulletColor = (60, 60, 60);
