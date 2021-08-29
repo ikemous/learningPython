@@ -17,12 +17,17 @@ class Bullet(Sprite):
 
         # Store the bullet's position as a decimal value
         self.y = float(self.rect.y);
+        self.x = float(self.rect.x);
     
     def update(self):
         ''' Move the bullet '''
         self.y -= self.settings.bulletSpeed;
+        self.x -= self.settings.bulletSpeed;
+        self.rect.x = self.x;
         self.rect.y = self.y;
 
     def drawBullet(self):
         ''' Draw the bullet to the screen '''
+        # pygame.transform.rotate(pygame.Surface(self.screen, self.color, self.rect), 45)
+        # pygame.transform.rotate(pygame.draw.rect(self.screen, self.color, self.rect), 45)
         pygame.draw.rect(self.screen, self.color, self.rect);

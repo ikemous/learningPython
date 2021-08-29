@@ -83,6 +83,9 @@ class Application:
             self.player.update(); 
             self.bullets.update();
             self.updateScreen();
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet);
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar
