@@ -20,6 +20,11 @@ class Application:
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
 
+    def fireBullet(self):
+        ''' Create a new bullet and add it to the bullets group '''
+        newBullet = Bullet(self);
+        self.bullets.add(newBullet);
+
     def checkKeyDown(self, event):
         ''' Respond To Key presses'''
         if event.key == pygame.K_a:
@@ -30,6 +35,8 @@ class Application:
             self.player.movingUp = True;
         elif event.key == pygame.K_s:
             self.player.movingDown = True;
+        elif event.key == pygame.MOUSEBUTTONDOWN and event.key == 1:
+            self.fireBullet();
 
     def checkKeyUp(self, event):
         ''' Respond To Key releases '''
