@@ -40,8 +40,8 @@ class Player:
         
         angle = atan2(playerPos[0] - self.currentMousePos[0], playerPos[1] - self.currentMousePos[1]);
         self.rotateAngle = degrees(angle);
-        print(f"Player Point:{playerPos} Mouse Point:{self.currentMousePos} Angle: {self.rotateAngle}");
-        print(self.rect);
+        # print(f"Player Point:{playerPos} Mouse Point:{self.currentMousePos} Angle: {self.rotateAngle}");
+        # print(self.rect);
 
     def update(self):
         ''' Update the players position based on the movement flag '''

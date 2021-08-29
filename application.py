@@ -35,8 +35,6 @@ class Application:
             self.player.movingUp = True;
         elif event.key == pygame.K_s:
             self.player.movingDown = True;
-        elif event.key == pygame.MOUSEBUTTONDOWN and event.key == 1:
-            self.fireBullet();
 
     def checkKeyUp(self, event):
         ''' Respond To Key releases '''
@@ -49,6 +47,11 @@ class Application:
         elif event.key == pygame.K_s:
             self.player.movingDown = False;
 
+    def mouseDown(self, event):
+        if event.button == 1:
+            self.fireBullet();
+            print("Click", self.bullets);
+
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
         for event in pygame.event.get():
@@ -58,6 +61,9 @@ class Application:
                 self.checkKeyDown(event);
             elif event.type == pygame.KEYUP:
                 self.checkKeyUp(event);
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.mouseDown(event);
+                    
     
     def drawBullets(self):
         for bullet in self.bullets.sprites():
@@ -66,6 +72,8 @@ class Application:
     def updateScreen(self):
         self.screen.fill(self.settings.backgroundColor);
         self.player.blitme();
+        for bullet in self.bullets.sprites():
+            bullet.drawBullet();
         pygame.display.flip();
 
     def runGame(self):
@@ -73,8 +81,8 @@ class Application:
         while True:
             self.checkEvents();      
             self.player.update(); 
-            self.updateScreen();
             self.bullets.update();
+            self.updateScreen();
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar
