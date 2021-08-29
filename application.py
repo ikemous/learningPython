@@ -58,7 +58,10 @@ class Application:
                 self.checkKeyDown(event);
             elif event.type == pygame.KEYUP:
                 self.checkKeyUp(event);
-                
+    
+    def drawBullets(self):
+        for bullet in self.bullets.sprites():
+            bullet.drawBullet();
             
     def updateScreen(self):
         self.screen.fill(self.settings.backgroundColor);
