@@ -2,6 +2,7 @@ import sys;
 import pygame;
 import ctypes
 from settings import Settings;
+from bullet import Bullet;
 from player import Player;
 
 class Application:
@@ -17,6 +18,7 @@ class Application:
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         pygame.display.set_caption(self.settings.caption);
         self.player = Player(self);
+        self.bullets = pygame.sprite.Group();
 
     def checkKeyDown(self, event):
         ''' Respond To Key presses'''
@@ -62,6 +64,7 @@ class Application:
             self.checkEvents();      
             self.player.update(); 
             self.updateScreen();
+            self.bullets.update();
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar
