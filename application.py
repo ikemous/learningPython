@@ -22,7 +22,14 @@ class Application:
 
     def fireBullet(self):
         ''' Create a new bullet and add it to the bullets group '''
-        newBullet = Bullet(self);
+        # y=mx+b
+        mousePos = pygame.mouse.get_pos();
+        playerPos = self.player.rect.center;
+        print(self.player.rect.center)
+        changeInY = mousePos[1] - playerPos[1];
+        changeInX = mousePos[0] - playerPos[0];
+        slope = changeInY / changeInX;
+        newBullet = Bullet(self, slope);
         self.bullets.add(newBullet);
 
     def checkKeyDown(self, event):

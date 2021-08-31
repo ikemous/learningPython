@@ -28,23 +28,15 @@ class Player:
         self.movingUp = False;
         self.movingDown = False;
 
-    def calculateSideLength(self, a, b):
-        ''' Caluclate the length between two points '''
-        # distance between two points sqrt((X2 - X1)^2 + (Y2 - Y1)^2)
-        return sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2);
-
     def updateRotateAngle(self):
         ''' Calculate rotation from old and new mouse posisitons '''
-        playerPos = (self.rect.x + 30, self.rect.y + 30);
+        # playerPos = (self.rect.x + 30, self.rect.y + 30);
+        playerPos = (self.rect.centerx + 30, self.rect.centery - 30);
         self.currentMousePos = pygame.mouse.get_pos();
-        
         angle = atan2(playerPos[0] - self.currentMousePos[0], playerPos[1] - self.currentMousePos[1]);
         self.rotateAngle = degrees(angle);
-        # print(f"Player Point:{playerPos} Mouse Point:{self.currentMousePos} Angle: {self.rotateAngle}");
-        # print(self.rect);
 
-    def update(self):
-        ''' Update the players position based on the movement flag '''
+    def updateMovement(self):
         if self.movingRight and self.rect.right < self.screenRect.right:
             self.x += self.settings.playerSpeed;
         elif self.movingLeft and self.rect.left > 0:
@@ -56,6 +48,10 @@ class Player:
         # Update the players x and y position
         self.rect.x = self.x;
         self.rect.y = self.y;
+
+    def update(self):
+        ''' Update the players position based on the movement flag '''
+        self.updateMovement();
         self.updateRotateAngle();
 
     def blitme(self):
