@@ -30,13 +30,13 @@ class Player:
 
     def updateRotateAngle(self):
         ''' Calculate rotation from old and new mouse posisitons '''
-        # playerPos = (self.rect.x + 30, self.rect.y + 30);
         playerPos = (self.rect.centerx + 30, self.rect.centery - 30);
         self.currentMousePos = pygame.mouse.get_pos();
         angle = atan2(playerPos[0] - self.currentMousePos[0], playerPos[1] - self.currentMousePos[1]);
         self.rotateAngle = degrees(angle);
 
     def updateMovement(self):
+        ''' Update the players movement according to the movement direction '''
         if self.movingRight and self.rect.right < self.screenRect.right:
             self.x += self.settings.playerSpeed;
         elif self.movingLeft and self.rect.left > 0:

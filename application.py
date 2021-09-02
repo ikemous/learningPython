@@ -13,23 +13,17 @@ class Application:
         pygame.init();
         self.settings = Settings();
         self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
+        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
-        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         pygame.display.set_caption(self.settings.caption);
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
 
     def fireBullet(self):
         ''' Create a new bullet and add it to the bullets group '''
-        # y=mx+b
-        mousePos = pygame.mouse.get_pos();
-        playerPos = self.player.rect.center;
-        print(self.player.rect.center)
-        changeInY = mousePos[1] - playerPos[1];
-        changeInX = mousePos[0] - playerPos[0];
-        slope = changeInY / changeInX;
-        newBullet = Bullet(self, slope);
+        x,y = pygame.mouse.get_pos();
+        newBullet = Bullet(self, self.player.rect.x + 30, self.player.rect.y + 30, x, y);
         self.bullets.add(newBullet);
 
     def checkKeyDown(self, event):
@@ -55,9 +49,9 @@ class Application:
             self.player.movingDown = False;
 
     def mouseDown(self, event):
+        ''' Respond to actions on the mouse press '''
         if event.button == 1:
             self.fireBullet();
-            print("Click", self.bullets);
 
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
@@ -73,14 +67,22 @@ class Application:
                     
     
     def drawBullets(self):
+        ''' Go Through Each Bullet and draw the sprites '''
         for bullet in self.bullets.sprites():
-            bullet.drawBullet();
-            
+            bullet.draw();
+    
+    def removeBullets(self):
+        ''' Remove Any Bullets from its sprite group '''
+        for bullet in self.bullets.copy():
+            if (bullet.rect.bottom <= 0 or bullet.rect.bottom >= self.settings.screenHeight 
+                    or bullet.rect.left <= 0 or bullet.rect.right >= self.settings.screenWidth):
+                self.bullets.remove(bullet);  
+
     def updateScreen(self):
+        ''' Update the screen and the items it contains '''
         self.screen.fill(self.settings.backgroundColor);
         self.player.blitme();
-        for bullet in self.bullets.sprites():
-            bullet.drawBullet();
+        self.drawBullets();
         pygame.display.flip();
 
     def runGame(self):
@@ -90,13 +92,13 @@ class Application:
             self.player.update(); 
             self.bullets.update();
             self.updateScreen();
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    self.bullets.remove(bullet);
+            self.removeBullets();
+            
+
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar
-    myappid = u'mycompany.myproduct.subproduct.version'; # arbitrary string
+    myappid = u'ikemous.games.mygameapp.1'; # arbitrary string
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid);
 
     # Make a game instance and run the game

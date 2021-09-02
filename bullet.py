@@ -1,42 +1,33 @@
 import pygame;
+from math import atan2, pi, cos, sin;
 from pygame.sprite import Sprite;
+from square import Square;
 
-class Bullet(Sprite):
+class Bullet(Square, Sprite):
     ''' Class to handle the bullets '''
 
-    def __init__(self, app, slope):
+    def __init__(self, app, x, y, targetx, targety):
         ''' Create bullet object at the ships current position '''
-        super().__init__();
-        self.screen = app.screen;
-        self.settings = app.settings;
-        self.color = self.settings.bulletColor;
+        # Call inheritance function(s)
+        super().__init__(app, x, y);
+        Sprite.__init__(self);
 
-        # Create bullet at (0,0) and then set the correct position
-        self.rect = pygame.Rect(0, 0, self.settings.bulletWidth, self.settings.bulletHeight)
-        self.rect.midtop = app.player.rect.center;
-
-        # Store the bullet's position as a decimal value
-        self.y = float(self.rect.y);
-        self.x = float(self.rect.x);
-
-        self.slope = slope;
+        # Calculate the angle between the player and mouse point
+        angle = atan2(targety - y, targetx - x);
         
-    
-    def update(self):
-        ''' Move the bullet ''' 
-        self.x += self.slope;
-        self.rect.x = self.x;
-        self.y -= self.slope;
-        self.rect.y = self.y;
-        # self.y -= self.slope;
-        # self.x += self.slope;
-        # self.rect.center = (self.rect.x + self.slope, self.rect.y + self.slope)
-        # self.rect.x = self.x;
-        # self.rect.y = self.y;
-        pass;
+        # Starting x and y positions
+        self.x = x;
+        self.y = y;
 
-    def drawBullet(self):
-        ''' Draw the bullet to the screen '''
-        pygame.draw.rect(self.screen, self.color, self.rect);
-        # endPos = pygame.mouse.get_pos()
-        # pygame.draw.line(self.screen, self.color, (self.rect.x, self.rect.y), endPos, width=20)
+        # Calculate the next point positions
+        self.dx = cos(angle) * self.speed;
+        self.dy = sin(angle) * self.speed;
+
+    def update(self):
+        ''' update the x and y positions to move the bullet '''
+        # Calculate the new x and y positions 
+        self.x = self.rect.x + self.dx;
+        self.y = self.rect.y + self.dy;
+        # Set the new x and y positions for the bullet
+        self.rect.x = int(self.x);
+        self.rect.y = int(self.y);

@@ -1,5 +1,6 @@
 class Settings:
     ''' Class To Hold All Settings For The Application '''
+    
     def __init__(self):
         ''' Initialize the settings class'''
         # Window Settings
@@ -14,7 +15,7 @@ class Settings:
         self.playerSpeed = 1;
 
         # Bullet Settings
-        self.bulletSpeed = 1.0;
-        self.bulletWidth = 3;
-        self. bulletHeight = 10;
+        self.bulletSpeed = 3.0;
+        self.bulletWidth = 10;
+        self.bulletHeight = 20;
         self.bulletColor = (10, 10, 10);
