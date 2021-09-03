@@ -6,24 +6,36 @@ class Enemy(Sprite):
 
     def __init__(self, app):
         super().__init__();
+
+        imageNumber = randint(0, 6);
+        direction = randint(1,4);
+
         self.screen = app.screen;
+        self.screenRect = app.screen.get_rect();
         self.settings = app.settings;
-        self.direction = 'E';
-        imageNumber = randint(1, 6);
+        self.direction = 4;
         self.image = pygame.image.load(self.settings.enemyImages[imageNumber])
         self.rect = self.image.get_rect();
-        self.x = float(self.rect.x);
-        self.y = float(self.rect.y);
-        direction = randint(1,4);
 
         if direction == 1:
             self.direction = 'N';
+            self.rect.x = randint(0, self.screenRect.right);
+            self.rect.y = self.screenRect.bottom;
         elif direction == 2:
             self.direction = 'E';
+            self.rect.x = 0;
+            self.rect.y = randint(0, self.screenRect.bottom);
         elif direction == 3:
             self.direction = 'S';
+            self.rect.x = randint(0, self.screenRect.right);
+            self.rect.y = 0;
         elif direction == 4:
-            self.direction == 'W';
+            self.direction = 'W';
+            self.rect.x = self.screenRect.right;
+            self.rect.y = randint(0, self.screenRect.bottom);
+
+        self.x = float(self.rect.x);
+        self.y = float(self.rect.y);
         
     def update(self):
         if self.direction == 'N':
