@@ -9,14 +9,13 @@ class Enemy(Sprite):
         self.screen = app.screen;
         self.settings = app.settings;
         self.direction = 'E';
-        self.startx = 0;
-        self.starty = 0;
         imageNumber = randint(1, 6);
         self.image = pygame.image.load(self.settings.enemyImages[imageNumber])
         self.rect = self.image.get_rect();
         self.x = float(self.rect.x);
         self.y = float(self.rect.y);
         direction = randint(1,4);
+
         if direction == 1:
             self.direction = 'N';
         elif direction == 2:
