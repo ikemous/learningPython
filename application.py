@@ -4,6 +4,7 @@ import ctypes
 from settings import Settings;
 from bullet import Bullet;
 from player import Player;
+from enemy import Enemy;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -13,12 +14,22 @@ class Application:
         pygame.init();
         self.settings = Settings();
         self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
-        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
+        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);a
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         pygame.display.set_caption(self.settings.caption);
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
+        self.enemies = pygame.sprite.Group();
+
+        enemy1 = Enemy(self);
+        enemy2 = Enemy(self);
+        enemy3 = Enemy(self);
+        enemy4 = Enemy(self);
+        self.enemies.add(enemy1);
+        self.enemies.add(enemy2);
+        self.enemies.add(enemy3);
+        self.enemies.add(enemy4);
 
     def fireBullet(self):
         ''' Create a new bullet and add it to the bullets group '''
@@ -65,7 +76,10 @@ class Application:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouseDown(event);
                     
-    
+    def drawEnemies(self):
+        for enemy in self.enemies:
+            enemy.blitme();
+
     def drawBullets(self):
         ''' Go Through Each Bullet and draw the sprites '''
         for bullet in self.bullets.sprites():
@@ -83,6 +97,7 @@ class Application:
         self.screen.fill(self.settings.backgroundColor);
         self.player.blitme();
         self.drawBullets();
+        self.drawEnemies();
         pygame.display.flip();
 
     def runGame(self):
@@ -91,6 +106,7 @@ class Application:
             self.checkEvents();      
             self.player.update(); 
             self.bullets.update();
+            self.enemies.update();
             self.updateScreen();
             self.removeBullets();
             

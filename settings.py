@@ -1,6 +1,6 @@
 class Settings:
     ''' Class To Hold All Settings For The Application '''
-    
+
     def __init__(self):
         ''' Initialize the settings class'''
         # Window Settings
@@ -19,3 +19,16 @@ class Settings:
         self.bulletWidth = 10;
         self.bulletHeight = 20;
         self.bulletColor = (10, 10, 10);
+
+        # Enemy Settings
+        self.enemySpeed = 0.2;
+        self.enemyImages = [
+            "images\\walrus.bmp",
+            "images\\rabbit.bmp",
+            "images\\beetle.bmp",
+            "images\\rhino.bmp",
+            "images\\squid.bmp",
+            "images\\boar.bmp",
+            "images\\snake.bmp",
+        ];
+        self.MAX_ENEMIES = 4;
