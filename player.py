@@ -19,6 +19,7 @@ class Player:
         self.rect.midbottom = self.screenRect.midbottom;
         self.x = float(self.rect.x);
         self.y = float(self.rect.y);
+        self.centerPlayer();
         self.currentMousePos = (self.screenRect.centerx, 0);
         self.rotateAngle = 0;
 
@@ -48,6 +49,12 @@ class Player:
         # Update the players x and y position
         self.rect.x = self.x;
         self.rect.y = self.y;
+
+    def centerPlayer(self):
+        self.rect.centerx = self.screenRect.centerx;
+        self.x = float(self.rect.x);
+        self.rect.centery = self.screenRect.centery;
+        self.y = float(self.rect.y)
 
     def update(self):
         ''' Update the players position based on the movement flag '''

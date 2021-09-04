@@ -100,14 +100,19 @@ class Application:
                 newEnemy = Enemy(self);
                 self.enemies.add(newEnemy);
                 count += 1;
+
+    
     
     def playerHit(self):
-        self.stats.lives -= 1;
-        print(self.stats.lives);
-
-        self.enemies.empty();
-        self.bullets.empty();
-        sleep(1);
+        if self.stats.lives > 0:
+            self.stats.lives -= 1;
+            self.enemies.empty();
+            self.bullets.empty();
+            sleep(1);
+        else:
+            self.enemies.empty();
+            self.bullets.empty();
+            self.stats.gameActive = False;
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
@@ -120,17 +125,17 @@ class Application:
     def runGame(self):
         ''' Star the main loop for the game '''
         while True:
-            self.checkEvents();      
-            self.player.update(); 
+            self.checkEvents();
             self.bullets.update();
             self.enemies.update();
             self.updateEnemyCount();
-            self.updateScreen();
             self.removeBullets();
             self.removeEnemies();
             if pygame.sprite.spritecollideany(self.player, self.enemies):
                 self.playerHit();
             collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
+            self.player.update();
+            self.updateScreen();
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar
