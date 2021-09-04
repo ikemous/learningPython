@@ -32,3 +32,4 @@ class Settings:
             "images\\snake.bmp",
         ];
         self.MAX_ENEMIES = 6;
+        self.enemyPoints = 10;

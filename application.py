@@ -8,6 +8,7 @@ from player import Player;
 from enemy import Enemy;
 from gameStats import GameStats;
 from button import Button;
+from scoreboard import Scoreboard;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -16,12 +17,13 @@ class Application:
         ''' initialize the gmae, and create game resources '''
         pygame.init();
         self.settings = Settings();
-        self.stats = GameStats(self);
         self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         pygame.display.set_caption(self.settings.caption);
+        self.stats = GameStats(self);
+        self.scoreboard = Scoreboard(self);
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
@@ -63,6 +65,7 @@ class Application:
             self.stats.gameActive = True;
             self.enemies.empty();
             self.bullets.empty();
+            self.scoreboard.prepScore();
 
     def mouseDown(self, event):
         ''' Respond to actions on the mouse press '''
@@ -126,6 +129,14 @@ class Application:
             self.enemies.empty();
             self.bullets.empty();
             self.stats.gameActive = False;
+    
+    def checkBulletAlienCollision(self):
+        collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
+        if collisions:
+            for enemies in collisions.values():
+                self.stats.score += self.settings.enemyPoints * len(enemies);
+            self.scoreboard.prepScore();
+
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
@@ -133,6 +144,7 @@ class Application:
         self.player.blitme();
         self.drawBullets();
         self.drawEnemies();
+        self.scoreboard.show();
         if not self.stats.gameActive:
             self.playButton.draw();
         pygame.display.flip();
@@ -149,7 +161,7 @@ class Application:
                 self.removeEnemies();
                 if pygame.sprite.spritecollideany(self.player, self.enemies):
                     self.playerHit();
-                collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
+                self.checkBulletAlienCollision();
             self.player.update();
             self.updateScreen();
 

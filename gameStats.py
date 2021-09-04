@@ -7,3 +7,4 @@ class GameStats:
 
     def resetStats(self):
         self.lives = self.settings.playerLives;
+        self.score = 0;
