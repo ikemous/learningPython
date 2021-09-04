@@ -13,23 +13,15 @@ class Application:
         ''' initialize the gmae, and create game resources '''
         pygame.init();
         self.settings = Settings();
-        self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
-        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);a
+        # self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);a
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         pygame.display.set_caption(self.settings.caption);
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
-
-        enemy1 = Enemy(self);
-        enemy2 = Enemy(self);
-        enemy3 = Enemy(self);
-        enemy4 = Enemy(self);
-        self.enemies.add(enemy1);
-        self.enemies.add(enemy2);
-        self.enemies.add(enemy3);
-        self.enemies.add(enemy4);
+        self.updateEnemyCount();
 
     def fireBullet(self):
         ''' Create a new bullet and add it to the bullets group '''
@@ -79,7 +71,7 @@ class Application:
     def drawEnemies(self):
         for enemy in self.enemies:
             enemy.blitme();
-
+    
     def drawBullets(self):
         ''' Go Through Each Bullet and draw the sprites '''
         for bullet in self.bullets.sprites():
@@ -90,7 +82,21 @@ class Application:
         for bullet in self.bullets.copy():
             if (bullet.rect.bottom <= 0 or bullet.rect.bottom >= self.settings.screenHeight 
                     or bullet.rect.left <= 0 or bullet.rect.right >= self.settings.screenWidth):
-                self.bullets.remove(bullet);  
+                self.bullets.remove(bullet);
+    
+    def removeEnemies(self):
+        for enemy in self.enemies.copy():
+            if (enemy.rect.bottom <= -40 or enemy.rect.bottom >= self.settings.screenHeight + 40
+                    or enemy.rect.left <= -40 or enemy.rect.right >= self.settings.screenWidth + 40):
+                self.enemies.remove(enemy);
+    
+    def updateEnemyCount(self):
+        if len(self.enemies) < 6:
+            count = len(self.enemies);
+            while count < self.settings.MAX_ENEMIES:
+                newEnemy = Enemy(self);
+                self.enemies.add(newEnemy);
+                count += 1;
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
@@ -107,10 +113,11 @@ class Application:
             self.player.update(); 
             self.bullets.update();
             self.enemies.update();
+            self.updateEnemyCount();
             self.updateScreen();
             self.removeBullets();
-            
-
+            self.removeEnemies();
+            collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
 
 if __name__ == '__main__':
     # Lines of code to allow the icon to be in the taskbar

@@ -7,7 +7,7 @@ class Settings:
         self.caption = "Space ship";
         self.screenWidth = 1200;
         self.screenHeight = 800;
-        self.backgroundColor = (100, 50, 10);
+        self.backgroundColor = (212, 241, 249);
         self.appIcon = "images\\icon.png";
 
         # Player Settings
@@ -23,7 +23,6 @@ class Settings:
         # Enemy Settings
         self.enemySpeed = 0.2;
         self.enemyImages = [
-            "images\\walrus.bmp",
             "images\\rabbit.bmp",
             "images\\beetle.bmp",
             "images\\rhino.bmp",
@@ -31,4 +30,4 @@ class Settings:
             "images\\boar.bmp",
             "images\\snake.bmp",
         ];
-        self.MAX_ENEMIES = 4;
+        self.MAX_ENEMIES = 6;
