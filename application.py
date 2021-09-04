@@ -66,6 +66,7 @@ class Application:
             self.enemies.empty();
             self.bullets.empty();
             self.scoreboard.prepScore();
+            self.scoreboard.prepPlayers();
 
     def mouseDown(self, event):
         ''' Respond to actions on the mouse press '''
@@ -121,6 +122,7 @@ class Application:
     def playerHit(self):
         if self.stats.lives > 0:
             self.stats.lives -= 1;
+            self.scoreboard.prepPlayers();
             self.enemies.empty();
             self.bullets.empty();
             self.player.centerPlayer();

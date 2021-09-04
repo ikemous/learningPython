@@ -1,12 +1,14 @@
 import pygame;
+from pygame.sprite import Sprite;
 from math import sqrt, acos, degrees, hypot, atan2;
 from settings import Settings;
 
-class Player:
+class Player(Sprite):
     ''' A Class To Manage The Player '''
 
     def __init__(self, app):
         ''' Initialize the player and its starting position '''
+        super().__init__();
         self.screen = app.screen;
         self.screenRect = app.screen.get_rect();
         self.settings = Settings();
