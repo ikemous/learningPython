@@ -1,10 +1,12 @@
 import sys;
 import pygame;
-import ctypes
+import ctypes;
+from time import sleep;
 from settings import Settings;
 from bullet import Bullet;
 from player import Player;
 from enemy import Enemy;
+from gameStats import GameStats;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -13,6 +15,7 @@ class Application:
         ''' initialize the gmae, and create game resources '''
         pygame.init();
         self.settings = Settings();
+        self.stats = GameStats(self);
         self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         self.icon = pygame.image.load(self.settings.appIcon);
@@ -97,6 +100,14 @@ class Application:
                 newEnemy = Enemy(self);
                 self.enemies.add(newEnemy);
                 count += 1;
+    
+    def playerHit(self):
+        self.stats.lives -= 1;
+        print(self.stats.lives);
+
+        self.enemies.empty();
+        self.bullets.empty();
+        sleep(1);
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
@@ -117,6 +128,8 @@ class Application:
             self.updateScreen();
             self.removeBullets();
             self.removeEnemies();
+            if pygame.sprite.spritecollideany(self.player, self.enemies):
+                self.playerHit();
             collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
 
 if __name__ == '__main__':
