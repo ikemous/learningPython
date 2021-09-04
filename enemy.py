@@ -54,9 +54,6 @@ class Enemy(Sprite):
 
         self.rect.x = self.x;
         self.rect.y = self.y;
-    
-    def collided(self, otherRect):
-        return self.rect.colliderect(otherRect);
         
     def blitme(self):
         self.screen.blit(self.image, self.rect);

@@ -10,10 +10,6 @@ class Square:
         self.rect = pygame.Rect(x, y, self.settings.bulletWidth, self.settings.bulletHeight);
         self.color = self.settings.bulletColor;
         self.speed = self.settings.bulletSpeed;
-
-    def collided(self, otherRect):
-        ''' Return weather or not the rect has collided with another surface '''
-        return self.rect.colliderrect(otherRect);
     
     def draw(self):
         ''' Draw the rect onto the screen '''
