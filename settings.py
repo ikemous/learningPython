@@ -13,6 +13,7 @@ class Settings:
         # Player Settings
         self.playerImage = "images\\stingray.bmp";
         self.playerSpeed = 1;
+        self.playerLives = 3;
 
         # Bullet Settings
         self.bulletSpeed = 3.0;
