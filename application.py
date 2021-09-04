@@ -13,8 +13,8 @@ class Application:
         ''' initialize the gmae, and create game resources '''
         pygame.init();
         self.settings = Settings();
-        # self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);a
+        self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
+        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         pygame.display.set_caption(self.settings.caption);
