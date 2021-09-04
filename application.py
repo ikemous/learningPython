@@ -7,6 +7,7 @@ from bullet import Bullet;
 from player import Player;
 from enemy import Enemy;
 from gameStats import GameStats;
+from button import Button;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -25,6 +26,7 @@ class Application:
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
         self.updateEnemyCount();
+        self.playButton = Button(self, "Play");
 
     def fireBullet(self):
         ''' Create a new bullet and add it to the bullets group '''
@@ -54,10 +56,22 @@ class Application:
         elif event.key == pygame.K_s:
             self.player.movingDown = False;
 
+    def checkPlayButton(self, mousePos):
+        buttonClicked = self.playButton.rect.collidepoint(mousePos);
+        if buttonClicked and not self.stats.gameActive:
+            self.stats.resetStats();
+            self.stats.gameActive = True;
+            self.enemies.empty();
+            self.bullets.empty();
+
     def mouseDown(self, event):
         ''' Respond to actions on the mouse press '''
         if event.button == 1:
-            self.fireBullet();
+            if self.stats.gameActive:
+                self.fireBullet();
+            else:
+                mousePos = pygame.mouse.get_pos();
+                self.checkPlayButton(mousePos);
 
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
@@ -101,13 +115,12 @@ class Application:
                 self.enemies.add(newEnemy);
                 count += 1;
 
-    
-    
     def playerHit(self):
         if self.stats.lives > 0:
             self.stats.lives -= 1;
             self.enemies.empty();
             self.bullets.empty();
+            self.player.centerPlayer();
             sleep(1);
         else:
             self.enemies.empty();
@@ -120,20 +133,23 @@ class Application:
         self.player.blitme();
         self.drawBullets();
         self.drawEnemies();
+        if not self.stats.gameActive:
+            self.playButton.draw();
         pygame.display.flip();
 
     def runGame(self):
         ''' Star the main loop for the game '''
         while True:
             self.checkEvents();
-            self.bullets.update();
-            self.enemies.update();
-            self.updateEnemyCount();
-            self.removeBullets();
-            self.removeEnemies();
-            if pygame.sprite.spritecollideany(self.player, self.enemies):
-                self.playerHit();
-            collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
+            if self.stats.gameActive:
+                self.bullets.update();
+                self.enemies.update();
+                self.updateEnemyCount();
+                self.removeBullets();
+                self.removeEnemies();
+                if pygame.sprite.spritecollideany(self.player, self.enemies):
+                    self.playerHit();
+                collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
             self.player.update();
             self.updateScreen();
 
