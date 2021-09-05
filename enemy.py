@@ -3,7 +3,44 @@ from pygame.sprite import Sprite;
 from random import randint;
 
 IMAGE_SIZE = 60;
+ENEMIES = [
+    {
+        "name": "wabbit",
+        "points": 30,
+        "speed": 1,
+        "imagePath": "images\\rabbit.bmp",
+        "health": 1
+    },
+    {
+        "name": "da Bettle",
+        "points": 5,
+        "speed": 0.8,
+        "imagePath": "images\\beetle.bmp",
+        "health": 1
+    },
+    {
+        "name": "big boi 2000",
+        "points": 15,
+        "speed": 0.6,
+        "imagePath": "images\\rhino.bmp",
+        "health": 1
+    },
+    {
+        "name": "Ugly Boar",
+        "points": 10,
+        "speed": 0.4,
+        "health": 1
+    }
+];
 
+"""
+    "images\\rabbit.bmp",
+    "images\\beetle.bmp",
+    "images\\rhino.bmp",
+    "images\\squid.bmp",
+    "images\\boar.bmp",
+    "images\\snake.bmp",
+"""
 class Enemy(Sprite):
 
     def __init__(self, app):

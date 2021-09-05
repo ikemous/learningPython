@@ -11,7 +11,7 @@ class Settings:
         self.appIcon = "images\\icon.png";
 
         # Player Settings
-        self.playerImage = "images\\stingray.bmp";
+        self.playerImage = "images\\playerImages\\stingray.bmp";
         self.playerSpeed = 1;
         self.playerLives = 3;
 
@@ -24,12 +24,10 @@ class Settings:
         # Enemy Settings
         self.enemySpeed = 0.2;
         self.enemyImages = [
-            "images\\rabbit.bmp",
-            "images\\beetle.bmp",
-            "images\\rhino.bmp",
-            "images\\squid.bmp",
-            "images\\boar.bmp",
-            "images\\snake.bmp",
+            "images\\enemyImages\\rabbit.bmp",
+            "images\\enemyImages\\beetle.bmp",
+            "images\\enemyImages\\boar.bmp",
+            "images\\enemyImages\\walrus.bmp",
         ];
         self.MAX_ENEMIES = 6;
         self.enemyPoints = 10;
