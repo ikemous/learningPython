@@ -6,9 +6,11 @@ from settings import Settings;
 from bullet import Bullet;
 from player import Player;
 from enemy import Enemy;
+from minion import Minion;
 from gameStats import GameStats;
 from button import Button;
 from scoreboard import Scoreboard;
+from boss import Boss;
 
 class Application:
     ''' Over class to manage game assets and behaviour '''
@@ -27,6 +29,7 @@ class Application:
         self.player = Player(self);
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
+        self.minions = pygame.sprite.Group();
         self.updateEnemyCount();
         self.playButton = Button(self, "Play");
 
@@ -88,10 +91,6 @@ class Application:
                 self.checkKeyUp(event);
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouseDown(event);
-                    
-    def drawEnemies(self):
-        for enemy in self.enemies:
-            enemy.blitme();
     
     def drawBullets(self):
         ''' Go Through Each Bullet and draw the sprites '''
@@ -105,12 +104,6 @@ class Application:
                     or bullet.rect.left <= 0 or bullet.rect.right >= self.settings.screenWidth):
                 self.bullets.remove(bullet);
     
-    def removeEnemies(self):
-        for enemy in self.enemies.copy():
-            if (enemy.rect.bottom <= -40 or enemy.rect.bottom >= self.settings.screenHeight + 40
-                    or enemy.rect.left <= -40 or enemy.rect.right >= self.settings.screenWidth + 40):
-                self.enemies.remove(enemy);
-    
     def updateEnemyCount(self):
         if len(self.enemies) < 6:
             count = len(self.enemies);
@@ -119,34 +112,60 @@ class Application:
                 self.enemies.add(newEnemy);
                 count += 1;
 
+    def createMinions(self):
+        if len(self.minions) < self.settings.MAX_ENEMIES:
+            count = len(self.minions);
+            while count < self.settings.MAX_ENEMIES:
+                newMinion = Minion(self);
+                self.minions.add(newMinion);
+                count += 1;
+
+    def drawMinions(self):
+        for minion in self.minions:
+            minion.blitme();
+
+    def checkMinionOutOfBounds(self):
+        for minion in self.minions.copy():
+            if (minion.rect.bottom <= -40 or minion.rect.bottom >= self.settings.screenHeight + 40
+                    or minion.rect.left <= -40 or minion.rect.right >= self.settings.screenWidth + 40):
+                self.minions.remove(minion);
+
+    def checkBulletMinionCollisions(self):
+        collisions = pygame.sprite.groupcollide(self.bullets, self.minions, True, False);
+        if collisions:
+            for minionGroup in collisions.values():
+                for minion in minionGroup:
+                    minion.health -= 1;
+                    if minion.health <= 0:
+                        self.stats.score += minion.points;
+                        self.minions.remove(minion);
+                        self.stats.killCount += 1;
+                        self.scoreboard.prepScore();
+
+    def checkPlayerMinionCollisions(self):
+        if pygame.sprite.spritecollideany(self.player, self.minions):
+            self.playerHit();
+
     def playerHit(self):
         if self.stats.lives > 0:
             self.stats.lives -= 1;
             self.scoreboard.prepPlayers();
-            self.enemies.empty();
+            self.minions.empty();
             self.bullets.empty();
             self.player.centerPlayer();
             sleep(1);
         else:
-            self.enemies.empty();
+            self.minions.empty();
             self.bullets.empty();
             self.stats.gameActive = False;
-    
-    def checkBulletAlienCollision(self):
-        collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
-        if collisions:
-            for enemies in collisions.values():
-                for enemy in enemies:
-                    self.stats.score += enemy.points * len(enemies);
-            self.scoreboard.prepScore();
-
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
         self.screen.fill(self.settings.backgroundColor);
         self.player.blitme();
+        self.minions.update();
+        self.drawMinions();
         self.drawBullets();
-        self.drawEnemies();
         self.scoreboard.show();
         if not self.stats.gameActive:
             self.playButton.draw();
@@ -157,14 +176,12 @@ class Application:
         while True:
             self.checkEvents();
             if self.stats.gameActive:
+                self.createMinions();
                 self.bullets.update();
-                self.enemies.update();
-                self.updateEnemyCount();
+                self.checkMinionOutOfBounds();
+                self.checkBulletMinionCollisions()
                 self.removeBullets();
-                self.removeEnemies();
-                if pygame.sprite.spritecollideany(self.player, self.enemies):
-                    self.playerHit();
-                self.checkBulletAlienCollision();
+                self.checkPlayerMinionCollisions();
             self.player.update();
             self.updateScreen();
 

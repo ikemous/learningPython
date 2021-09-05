@@ -10,3 +10,4 @@ class GameStats:
         self.lives = self.settings.playerLives;
         self.score = 0;
         self.stage = 1;
+        self.killCount = 0;

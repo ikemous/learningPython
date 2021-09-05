@@ -23,6 +23,17 @@ class Settings:
 
         # Enemy Settings
         self.enemySpeed = 0.2;
+        self.enemyBosses = {
+            1: {
+                "name": "Bruce",
+                "imagePath": "images\\boss\\shark.bmp",
+                "points": 1000,
+                "speed": 0.3,
+                "health": 100,
+            },
+            # 2: {},
+            # 3: {},
+        }
         self.enemyGroups = {
             1: [
                 {
