@@ -54,15 +54,67 @@ class Settings:
                     "health": 1,
                 }
             ],
-            # 2: [],
-            # 3: [],
+            2: [
+                {
+                    "name": "the copycat",
+                    "imagePath": "images\\enemy\\parrot.bmp",
+                    "points": 110,
+                    "speed": 0.25,
+                    "health": 2,
+                },
+                {   
+                    "name": "do you feel it now mrCrabs?",
+                    "imagePath": "images\\enemy\\crab.bmp",
+                    "points": 125,
+                    "speed": 0.15,
+                    "health": 3,
+                },
+                {
+                    "name": "bully mc bullfinch",
+                    "imagePath": "images\\enemy\\bullfinch.bmp",
+                    "points": 75,
+                    "speed": 0.4,
+                    "health": 1,
+                },
+                {
+                    "name": "pinky the flamingo",
+                    "imagePath": "images\\enemy\\flamingo.bmp",
+                    "points": 200,
+                    "speed": 0.05,
+                    "health": 8,
+                },
+            ],
+            3: [
+                {
+                    "name": "charlet the spider",
+                    "imagePath": "images\\enemy\\spider.bmp",
+                    "points": 20,
+                    "speed": 0.45,
+                    "health": 1,
+                },
+                {
+                    "name": "not so ladybug",
+                    "imagePath": "images\\enemy\\ladybug.bmp",
+                    "points": 25,
+                    "speed": 0.65,
+                    "health": 1,
+                },
+                {
+                    "name": "i can't believe it's not butter",
+                    "imagePath": "images\\enemy\\butterfly.bmp",
+                    "points": 50,
+                    "speed": 0.75,
+                    "health": 1,
+                },
+                {
+                    "name": "berry the bee",
+                    "imagePath": "images\\enemy\\bee.bmp",
+                    "points": 200,
+                    "speed": 0.75,
+                    "health": 1,
+                },
+            ],
             # 4: [],
         };
-        self.enemyImages = [
-            "images\\enemy\\rabbit.bmp",
-            "images\\enemy\\beetle.bmp",
-            "images\\enemy\\boar.bmp",
-            "images\\enemy\\walrus.bmp",
-        ];
         self.MAX_ENEMIES = 6;
         self.enemyPoints = 10;

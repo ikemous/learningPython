@@ -12,19 +12,18 @@ class Enemy(Sprite):
         self.screen = app.screen;
         self.screenRect = app.screen.get_rect();
         self.settings = app.settings;
-        enemyNumber = randint(0, len(self.settings.enemyGroups[1]) - 1);
-        self.enemySettings = self.settings.enemyGroups[1][enemyNumber];
-        self.points = self.enemySettings["points"];
-        imagePath = self.enemySettings["imagePath"];
+        stage = app.stats.stage;
+        enemyNumber = randint(0, len(self.settings.enemyGroups[stage]) - 1);
+        enemySettings = self.settings.enemyGroups[stage][enemyNumber];
+        self.points = enemySettings["points"];
+        self.health = enemySettings["health"];
+        self.speed = enemySettings["speed"];
+        imagePath = enemySettings["imagePath"];
         self.image = pygame.image.load(imagePath);
         direction = randint(1,4);
         self.direction = 4;
         self.rect = self.image.get_rect();
         
-        # imageNumber = randint(0, len(self.settings.enemyImages) - 1);
-        # enemyNumber = randint(0, len(self.settings.enemyGroups[1]) - 1);
-        # self.image = pygame.image.load(self.settings.enemyImages[imageNumber])
-
         if direction == 1:
             self.direction = 'N';
             self.rect.x = randint(0, self.screenRect.right);
@@ -47,13 +46,13 @@ class Enemy(Sprite):
         
     def update(self):
         if self.direction == 'N':
-            self.y -= self.settings.enemySpeed;
+            self.y -= self.speed;
         if self.direction == 'E':
-            self.x += self.settings.enemySpeed;
+            self.x += self.speed;
         if self.direction == 'S':
-            self.y += self.settings.enemySpeed;
+            self.y += self.speed;
         if self.direction == 'W':
-            self.x -= self.settings.enemySpeed;
+            self.x -= self.speed;
 
         self.rect.x = self.x;
         self.rect.y = self.y;
