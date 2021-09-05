@@ -136,7 +136,8 @@ class Application:
         collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True);
         if collisions:
             for enemies in collisions.values():
-                self.stats.score += self.settings.enemyPoints * len(enemies);
+                for enemy in enemies:
+                    self.stats.score += enemy.points * len(enemies);
             self.scoreboard.prepScore();
 
 

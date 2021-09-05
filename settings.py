@@ -23,11 +23,46 @@ class Settings:
 
         # Enemy Settings
         self.enemySpeed = 0.2;
+        self.enemyGroups = {
+            1: [
+                {
+                    "name": "ribbit",
+                    "imagePath": "images\\enemy\\frog.bmp",
+                    "points": 10,
+                    "speed": 0.2,
+                    "health": 1,
+                },
+                {
+                    "name": "perry",
+                    "imagePath": "images\\enemy\\platypus.bmp",
+                    "points": 100,
+                    "speed": 0.4,
+                    "health": 1,
+                },
+                {
+                    "name": "mumbo",
+                    "imagePath": "images\\enemy\penguin.bmp",
+                    "points": 25,
+                    "speed": 0.1,
+                    "health": 1,
+                },
+                {
+                    "name": "wally",
+                    "imagePath": "images\\enemy\\walrus.bmp",
+                    "points": 75,
+                    "speed": 0.1,
+                    "health": 1,
+                }
+            ],
+            # 2: [],
+            # 3: [],
+            # 4: [],
+        };
         self.enemyImages = [
-            "images\\enemyImages\\rabbit.bmp",
-            "images\\enemyImages\\beetle.bmp",
-            "images\\enemyImages\\boar.bmp",
-            "images\\enemyImages\\walrus.bmp",
+            "images\\enemy\\rabbit.bmp",
+            "images\\enemy\\beetle.bmp",
+            "images\\enemy\\boar.bmp",
+            "images\\enemy\\walrus.bmp",
         ];
         self.MAX_ENEMIES = 6;
         self.enemyPoints = 10;
