@@ -113,9 +113,6 @@ class Application:
                 newEnemy = Enemy(self);
                 self.enemies.add(newEnemy);
                 count += 1;
-    
-    def spawnBoss():
-        self.boss.blitme();
 
     def createMinions(self):
         if len(self.minions) < self.settings.MAX_ENEMIES:
@@ -160,7 +157,11 @@ class Application:
     def checkPlayerMinionCollisions(self):
         if pygame.sprite.spritecollideany(self.player, self.minions):
             self.playerHit();
-    
+        
+    def checkPlayerBossCollision(self):
+        if pygame.sprite.collide_rect(self.player, self.boss):
+            self.playerHit();
+
     def checkBossOutOfBounds(self):
         if (self.boss.rect.bottom <= -60 or self.boss.rect.bottom >= self.settings.screenHeight + 60
                     or self.boss.rect.left <= -60 or self.boss.rect.right >= self.settings.screenWidth + 60):
@@ -171,10 +172,15 @@ class Application:
         boss.health = self.boss.health;
         self.boss = boss;
 
+    def spawnBoss(self):
+        self.stats.bossSpawned = True;
+        self.boss = Boss(self);
+        
     def playerHit(self):
         if self.stats.lives > 0:
             self.stats.lives -= 1;
             self.scoreboard.prepPlayers();
+            self.resetBoss();
             self.minions.empty();
             self.bullets.empty();
             self.player.centerPlayer();
@@ -182,6 +188,8 @@ class Application:
         else:
             self.minions.empty();
             self.bullets.empty();
+            self.resetBoss();
+            self.stats.bossSpawned = False;
             self.stats.gameActive = False;
 
     def updateScreen(self):
@@ -213,6 +221,7 @@ class Application:
                     self.boss.update();
                     self.checkBossOutOfBounds();
                     self.checkBulletBossCollisions();
+                    self.checkPlayerBossCollision();
             self.player.update();
             self.updateScreen();
 
