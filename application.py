@@ -1,6 +1,7 @@
 import sys;
 import pygame;
 import ctypes;
+import random;
 from time import sleep;
 from settings import Settings;
 from bullet import Bullet;
@@ -27,6 +28,7 @@ class Application:
         self.stats = GameStats(self);
         self.scoreboard = Scoreboard(self);
         self.player = Player(self);
+        self.boss = Boss(self);
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
         self.minions = pygame.sprite.Group();
@@ -111,6 +113,9 @@ class Application:
                 newEnemy = Enemy(self);
                 self.enemies.add(newEnemy);
                 count += 1;
+    
+    def spawnBoss():
+        self.boss.blitme();
 
     def createMinions(self):
         if len(self.minions) < self.settings.MAX_ENEMIES:
@@ -142,9 +147,29 @@ class Application:
                         self.stats.killCount += 1;
                         self.scoreboard.prepScore();
 
+    def checkBulletBossCollisions(self):
+        collision = pygame.sprite.spritecollideany(self.boss, self.bullets);
+        # collisions = pygame.sprite.collide_rect(self.boss, self.bullets)
+        if collision:
+            self.bullets.remove(collision);
+            self.boss.health -= 1;
+            if self.boss.health <= 0:
+                self.boss = None;
+                self.stats.bossSpawned = False;
+
     def checkPlayerMinionCollisions(self):
         if pygame.sprite.spritecollideany(self.player, self.minions):
             self.playerHit();
+    
+    def checkBossOutOfBounds(self):
+        if (self.boss.rect.bottom <= -60 or self.boss.rect.bottom >= self.settings.screenHeight + 60
+                    or self.boss.rect.left <= -60 or self.boss.rect.right >= self.settings.screenWidth + 60):
+            self.resetBoss();
+
+    def resetBoss(self):
+        boss = Boss(self);
+        boss.health = self.boss.health;
+        self.boss = boss;
 
     def playerHit(self):
         if self.stats.lives > 0:
@@ -162,6 +187,8 @@ class Application:
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
         self.screen.fill(self.settings.backgroundColor);
+        if self.stats.bossSpawned:
+            self.boss.blitme();
         self.player.blitme();
         self.minions.update();
         self.drawMinions();
@@ -182,6 +209,10 @@ class Application:
                 self.checkBulletMinionCollisions()
                 self.removeBullets();
                 self.checkPlayerMinionCollisions();
+                if self.stats.bossSpawned:
+                    self.boss.update();
+                    self.checkBossOutOfBounds();
+                    self.checkBulletBossCollisions();
             self.player.update();
             self.updateScreen();
 

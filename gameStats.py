@@ -5,6 +5,7 @@ class GameStats:
         self.resetStats();
         self.gameActive = False;
         self.stage = 1;
+        self.bossSpawned = True;
 
     def resetStats(self):
         self.lives = self.settings.playerLives;

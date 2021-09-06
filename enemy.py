@@ -12,22 +12,14 @@ class Enemy(Sprite):
         self.screen = app.screen;
         self.screenRect = app.screen.get_rect();
         self.settings = app.settings;
-        direction = randint(1,4);
-        self.direction = 4;
         self.image = pygame.image.load("images\\enemy\\beetle.bmp");
         self.rect = self.image.get_rect();
+        direction = randint(1,4);
+        self.setDirection(direction);
+        self.x = float(self.rect.x);
+        self.y = float(self.rect.y);
 
-        
-        # stage = app.stats.stage;
-        # enemyNumber = randint(0, len(self.settings.enemyGroups[stage]) - 1);
-        # enemySettings = self.settings.enemyGroups[stage][enemyNumber];
-        # self.points = enemySettings["points"];
-        # self.health = enemySettings["health"];
-        # self.speed = enemySettings["speed"];
-        # imagePath = enemySettings["imagePath"];
-        # self.image = pygame.image.load(imagePath);
-        # self.rect = self.image.get_rect();
-        
+    def setDirection(self, direction):
         if direction == 1:
             self.direction = 'N';
             self.rect.x = randint(0, self.screenRect.right);
@@ -44,9 +36,6 @@ class Enemy(Sprite):
             self.direction = 'W';
             self.rect.x = self.screenRect.right - IMAGE_SIZE;
             self.rect.y = randint(0, self.screenRect.bottom);
-
-        self.x = float(self.rect.x);
-        self.y = float(self.rect.y);
         
     def update(self):
         if self.direction == 'N':
