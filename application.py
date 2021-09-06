@@ -2,6 +2,7 @@ import sys;
 import pygame;
 import ctypes;
 import random;
+from threading import Timer;
 from time import sleep;
 from settings import Settings;
 from bullet import Bullet;
@@ -72,6 +73,8 @@ class Application:
             self.bullets.empty();
             self.scoreboard.prepScore();
             self.scoreboard.prepPlayers();
+            timer = Timer(self.stats.stageTimer, self.spawnBoss);
+            timer.start();
 
     def mouseDown(self, event):
         ''' Respond to actions on the mouse press '''

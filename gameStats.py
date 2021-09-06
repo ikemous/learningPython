@@ -4,11 +4,13 @@ class GameStats:
         self.settings = app.settings;
         self.resetStats();
         self.gameActive = False;
+        self.bossSpawned = False;
+        self.stageTimer = 90;
         self.stage = 1;
-        self.bossSpawned = True;
 
     def resetStats(self):
         self.lives = self.settings.playerLives;
+        self.bossSpawned = False;
         self.score = 0;
         self.stage = 1;
         self.killCount = 0;
