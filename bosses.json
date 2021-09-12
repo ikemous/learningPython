@@ -1,0 +1,26 @@
+{
+    "1": {
+        "name": "Bruce",
+        "imagePath": "images\\boss\\shark.bmp",
+        "points": 1000,
+        "speed": 0.3,
+        "health": 100,
+        "timer": 5
+    },
+    "2": {
+        "name": "Big boi 2000",
+        "imagePath": "images\\boss\\elephant.bmp",
+        "points": 10000,
+        "speed": 0.05,
+        "health": 250,
+        "timer": 90
+    },
+    "3": {
+        "name": "Buffy The Buffalo",
+        "imagePath": "images\\boss\\buffalo.bmp",
+        "points": 50000,
+        "speed": 0.2,
+        "health": 500,
+        "timer": 90
+    }
+}

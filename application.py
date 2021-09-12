@@ -19,28 +19,45 @@ class Application:
 
     def __init__(self):
         ''' initialize the gmae, and create game resources '''
+        # Initiate pygame
         pygame.init();
+
+        # Grab Settings
         self.settings = Settings();
-        self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
-        # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
+
+        # Set game screen componenets
+        # self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight));
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN);
+        self.settings.screenWidth = self.screen.get_rect().width;
+        self.settings.screenHeight = self.screen.get_rect().height;
         self.icon = pygame.image.load(self.settings.appIcon);
         pygame.display.set_icon(self.icon);
         pygame.display.set_caption(self.settings.caption);
+
+        # initiate Stas/Scoreboard
         self.stats = GameStats(self);
         self.scoreboard = Scoreboard(self);
+
+        # Create The Player
         self.player = Player(self);
+
+        # Create Other Sprite Groups(Enemies, Boss, Bullets)
         self.boss = Boss(self);
         self.bullets = pygame.sprite.Group();
         self.enemies = pygame.sprite.Group();
         self.minions = pygame.sprite.Group();
-        self.updateEnemyCount();
-        self.playButton = Button(self, "Play");
 
-    def fireBullet(self):
-        ''' Create a new bullet and add it to the bullets group '''
-        x,y = pygame.mouse.get_pos();
-        newBullet = Bullet(self, self.player.rect.x + 30, self.player.rect.y + 30, x, y);
-        self.bullets.add(newBullet);
+        # Create Buttons
+        centerScreen = self.screen.get_rect().center;
+        
+        self.playButton = Button(self, "Play", center=centerScreen);
+        self.quitButton = Button(self, "Quit", width=100, center=(70, 40));
+        
+        # Draw Buttons
+        self.drawMainMenu();
+
+        # Create timer variable for future use
+        self.timer = None;
 
     def checkKeyDown(self, event):
         ''' Respond To Key presses'''
@@ -52,6 +69,8 @@ class Application:
             self.player.movingUp = True;
         elif event.key == pygame.K_s:
             self.player.movingDown = True;
+        elif event.key == pygame.K_ESCAPE:
+            self.stats.gameActive = not self.stats.gameActive;
 
     def checkKeyUp(self, event):
         ''' Respond To Key releases '''
@@ -64,17 +83,34 @@ class Application:
         elif event.key == pygame.K_s:
             self.player.movingDown = False;
 
+    def startGame(self):
+        self.stats.gameActive = True;
+        self.stats.gameStarted = True;
+
+    def exitGame(self):
+        if self.timer != None and self.timer._started:
+            self.cancelTimer();
+        self.enemies.empty();
+        self.bullets.empty();
+        sys.exit();
+
     def checkPlayButton(self, mousePos):
         buttonClicked = self.playButton.rect.collidepoint(mousePos);
         if buttonClicked and not self.stats.gameActive:
-            self.stats.resetStats();
             self.stats.gameActive = True;
-            self.enemies.empty();
-            self.bullets.empty();
-            self.scoreboard.prepScore();
-            self.scoreboard.prepPlayers();
-            timer = Timer(self.stats.stageTimer, self.spawnBoss);
-            timer.start();
+            if not self.stats.gameStarted:
+                self.stats.resetStats();
+                self.enemies.empty();
+                self.bullets.empty();
+                self.scoreboard.prepScore();
+                self.scoreboard.prepPlayers();
+                self.stats.gameStarted = True;
+                self.createTimer();
+
+    def checkQuitButton(self, mousePos):
+        buttonClicked = self.quitButton.rect.collidepoint(mousePos);
+        if buttonClicked:
+            self.exitGame();
 
     def mouseDown(self, event):
         ''' Respond to actions on the mouse press '''
@@ -84,12 +120,13 @@ class Application:
             else:
                 mousePos = pygame.mouse.get_pos();
                 self.checkPlayButton(mousePos);
+                self.checkQuitButton(mousePos);
 
     def checkEvents(self):
         ''' Respond To Keypresses and mouse events '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit();
+                self.exitGame();
             elif event.type == pygame.KEYDOWN:
                 self.checkKeyDown(event);
             elif event.type == pygame.KEYUP:
@@ -97,6 +134,12 @@ class Application:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.mouseDown(event);
     
+    def fireBullet(self):
+        ''' Create a new bullet and add it to the bullets group '''
+        x,y = pygame.mouse.get_pos();
+        newBullet = Bullet(self, self.player.rect.x + 30, self.player.rect.y + 30, x, y);
+        self.bullets.add(newBullet);
+
     def drawBullets(self):
         ''' Go Through Each Bullet and draw the sprites '''
         for bullet in self.bullets.sprites():
@@ -109,14 +152,6 @@ class Application:
                     or bullet.rect.left <= 0 or bullet.rect.right >= self.settings.screenWidth):
                 self.bullets.remove(bullet);
     
-    def updateEnemyCount(self):
-        if len(self.enemies) < 6:
-            count = len(self.enemies);
-            while count < self.settings.MAX_ENEMIES:
-                newEnemy = Enemy(self);
-                self.enemies.add(newEnemy);
-                count += 1;
-
     def createMinions(self):
         if len(self.minions) < self.settings.MAX_ENEMIES:
             count = len(self.minions);
@@ -149,13 +184,16 @@ class Application:
 
     def checkBulletBossCollisions(self):
         collision = pygame.sprite.spritecollideany(self.boss, self.bullets);
-        # collisions = pygame.sprite.collide_rect(self.boss, self.bullets)
         if collision:
             self.bullets.remove(collision);
             self.boss.health -= 1;
             if self.boss.health <= 0:
-                self.boss = None;
                 self.stats.bossSpawned = False;
+                self.stats.score += self.boss.points;
+                self.stats.killCount += 1;
+                self.boss = None;
+                self.scoreboard.prepScore();       
+                self.startNextStage();         
 
     def checkPlayerMinionCollisions(self):
         if pygame.sprite.spritecollideany(self.player, self.minions):
@@ -178,7 +216,24 @@ class Application:
     def spawnBoss(self):
         self.stats.bossSpawned = True;
         self.boss = Boss(self);
-        
+
+    def cancelTimer(self):
+        self.timer.cancel();
+        self.timer = None;
+    
+    def createTimer(self):
+        self.timer = Timer(self.stats.stageTimer, self.spawnBoss);
+        self.timer.start();
+
+    def startNextStage(self):
+        self.stats.stage += 1;
+        self.boss = None;
+        self.boss = Boss(self);
+        self.cancelTimer();
+        self.createTimer();
+        self.minions.empty();
+        sleep(1);
+
     def playerHit(self):
         if self.stats.lives > 0:
             self.stats.lives -= 1;
@@ -194,38 +249,54 @@ class Application:
             self.resetBoss();
             self.stats.bossSpawned = False;
             self.stats.gameActive = False;
+            if self.timer._started:
+                self.cancelTimer();
+
+    def drawMainMenu(self):
+        self.playButton.draw();
+        self.quitButton.draw();
+        pass;
+    
+    def updateGame(self):
+        self.createMinions();
+        self.bullets.update();
+        self.checkMinionOutOfBounds();
+        self.checkBulletMinionCollisions();
+        self.removeBullets();
+        self.checkPlayerMinionCollisions();
+        if self.stats.bossSpawned:
+            self.boss.update();
+            self.checkBossOutOfBounds();
+            self.checkBulletBossCollisions();
+            self.checkPlayerBossCollision();
 
     def updateScreen(self):
         ''' Update the screen and the items it contains '''
         self.screen.fill(self.settings.backgroundColor);
-        if self.stats.bossSpawned:
-            self.boss.blitme();
-        self.player.blitme();
-        self.minions.update();
-        self.drawMinions();
-        self.drawBullets();
-        self.scoreboard.show();
         if not self.stats.gameActive:
-            self.playButton.draw();
+            self.drawMainMenu();
+        else:
+            self.scoreboard.show();
+            self.player.blitme();
+            self.minions.update();
+            self.drawMinions();
+            self.drawBullets();
+            if self.stats.bossSpawned:
+                self.boss.blitme();
         pygame.display.flip();
 
     def runGame(self):
         ''' Star the main loop for the game '''
         while True:
+            # Check For Any Key Press Events
             self.checkEvents();
-            if self.stats.gameActive:
-                self.createMinions();
-                self.bullets.update();
-                self.checkMinionOutOfBounds();
-                self.checkBulletMinionCollisions()
-                self.removeBullets();
-                self.checkPlayerMinionCollisions();
-                if self.stats.bossSpawned:
-                    self.boss.update();
-                    self.checkBossOutOfBounds();
-                    self.checkBulletBossCollisions();
-                    self.checkPlayerBossCollision();
+            # Check If The Game Is Active
+            if self.stats.gameActive and self.stats.gameStarted:
+                # Update The Game
+                self.updateGame();
+            # # Update The Player
             self.player.update();
+            # Update The Screen
             self.updateScreen();
 
 if __name__ == '__main__':

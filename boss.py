@@ -5,7 +5,7 @@ class Boss(Enemy):
     def __init__(self, app):
         super().__init__(app);
         
-        stage = app.stats.stage;
+        stage = str(app.stats.stage);
         bossSettings = self.settings.enemyBosses[stage];
         self.points = bossSettings["points"];
         self.health = bossSettings["health"];

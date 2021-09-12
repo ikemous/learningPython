@@ -7,7 +7,7 @@ class Minion(Enemy):
     def __init__(self, app):
         super().__init__(app);
 
-        stage = app.stats.stage;
+        stage = str(app.stats.stage);
         enemyNumber = randint(0, len(self.settings.enemyGroups[stage]) - 1);
         enemySettings = self.settings.enemyGroups[stage][enemyNumber];
         self.points = enemySettings["points"];
